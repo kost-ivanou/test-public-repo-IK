@@ -19,11 +19,14 @@ public class UserService : IUserService
     }
     public async Task<User> GetUserAsync()
     {
-        throw new NotImplementedException();
+        var user = await _dbContext.Users.OrderByDescending(u => u.Sessions.Count).FirstOrDefaultAsync();
+        return user;
     }
 
     public async Task<List<User>> GetUsersAsync()
     {
-        throw new NotImplementedException();
+        var users = await _dbContext.Users.Where(u => u.Sessions.Any(s => s.DeviceType == Enums.DeviceType.Mobile))
+            .ToListAsync();
+        return users; 
     }
 }
